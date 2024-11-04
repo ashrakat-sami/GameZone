@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CartItem>
+
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+
+
+@if (Model != null @* && Model.Any() *@)
+{
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Game?.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Game?.Price.ToString("C")</td>
+                <td>@(item.Quantity * (item.Game?.Price ?? 0)).ToString("C")</td>
+                <td>
+                    @using (Html.BeginForm("RemoveFromCart", "CartItem", new { cartItemId = item.Id }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Remove" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
